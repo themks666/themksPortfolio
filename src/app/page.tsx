@@ -1,69 +1,107 @@
-import Image from "next/image";
+import { MDXRemote } from "next-mdx-remote/rsc";
+import Link from "next/link";
+import { BsEnvelopeArrowUp, BsGithub, BsLinkedin } from "react-icons/bs";
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <>
+      <div className="absolute h-40 w-40 bg-blue-500/50 top-16 left-1/6 -z-10 rounded-full   blur-3xl"></div>
+      <div className="absolute h-40 w-40 bg-rose-500/50 bottom-16 right-1/6 -z-10 rounded-full   blur-3xl"></div>
+      <section className="flex grow w-full mx-auto pt-10 justify-center">
+        <main className="">
+          <p className="text-emerald-600 lg:text-2xl md:text-xl font-semibold">
+            👋 Hey there!, I'm-
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+          <p className=" lg:text-8xl sm:text-6xl text-5xl font-bold">
+            Manish K. Sah
+          </p>
+          <div className="py-5">
+            <p className="lg:text-3xl md:text-2xl text-xl py-3 text-center font-medium">
+              Software Engineer😀
+            </p>
+            <p className="text-xl dark:text-gray-300 text-center">
+              🚀A self-taught developer currently studying B.Tech AI
+            </p>
+          </div>
+          <div className="py-3 text-lg md:text-xl ">
+            <p className="dark:text-gray-300  text-center">
+              ⚡Intrested In Technologies like{" "}
+              <span className="text-orange-400 font-bold">Blender</span>,{" "}
+              <span className="text-stone-500 font-bold">Unity Games</span> and{" "}
+              <span className="text-blue-400 font-bold">NextJS</span>
+            </p>
+            <p className="text-center   font-medium">
+              {" "}
+              A student at{" "}
+              <span className="text-purple-500">
+                Orchid International College
+              </span>
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center justify-center py-4 gap-6">
+            <div className="flex flex-col items-center gap-2">
+              <i className="devicon-react-original colored lg:text-[32px] md:text-[28px] text-[25px]"></i>
+              <span className="text-sm text-gray-400">React</span>
+            </div>
+
+            <div className="flex flex-col items-center gap-2">
+              <i className="devicon-nextjs-plain lg:text-[32px] md:text-[28px] text-[25px]"></i>
+              <span className="text-sm text-gray-400">Next.js</span>
+            </div>
+
+            <div className="flex flex-col items-center gap-2">
+              <i className="devicon-nodejs-plain colored lg:text-[32px] md:text-[28px] text-[25px]"></i>
+              <span className="text-sm text-gray-400">Node.js</span>
+            </div>
+
+            <div className="flex flex-col items-center gap-2">
+              <i className="devicon-mongodb-plain colored lg:text-[32px] md:text-[28px] text-[25px]"></i>
+              <span className="text-sm text-gray-400">MongoDB</span>
+            </div>
+
+            <div className="flex flex-col items-center gap-2">
+              <i className="devicon-python-plain colored lg:text-[32px] md:text-[28px] text-[25px]"></i>
+              <span className="text-sm text-gray-400">Python</span>
+            </div>
+
+            <div className="flex flex-col items-center gap-2">
+              <i className="devicon-unity-plain lg:text-[32px] md:text-[28px] text-[25px]"></i>
+              <span className="text-sm text-gray-400">Unity</span>
+            </div>
+
+            <div className="flex flex-col items-center gap-2">
+              <i className="devicon-blender-original colored lg:text-[32px] md:text-[28px] text-[25px]"></i>
+              <span className="text-sm text-gray-400">Blender</span>
+            </div>
+          </div>
+          <footer className="text-center pt-5 flex gap-4 justify-center w-full">
+            <Link href="/github.com/themks666">
+              <span className="flex border-4 border-emerald-700/60 rounded-lg gap-3 py-2 px-4 justify-between items-center">
+                <BsGithub className="lg:text-[25px] md:text-[20px] text-[15px]"></BsGithub>
+                <span className="md:text-[14px] text-[12px]">
+                  Github
+                </span>
+              </span>
+            </Link>
+            <Link href="/github.com/themks666">
+              <span className="flex border-4 border-emerald-700/60 rounded-lg gap-3 py-2 px-4 justify-between items-center">
+                <BsEnvelopeArrowUp className="lg:text-[25px] md:text-[20px] text-[15px]"></BsEnvelopeArrowUp>
+                <span className="] md:text-[14px] text-[12px]">
+                  Email
+                </span>
+              </span>
+            </Link>
+            <Link href="/github.com/themks666">
+              <span className="flex border-4 border-emerald-700/60 rounded-lg gap-3 py-2 px-4 justify-between items-center">
+                <BsLinkedin className="lg:text-[25px] md:text-[20px] text-[15px]"></BsLinkedin>
+                <span className=" md:text-[14px] text-[12px]">
+                  Linkedin
+                </span>
+              </span>
+            </Link>
+          </footer>
+        </main>
+      </section>
+    </>
   );
 }

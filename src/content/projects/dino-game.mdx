@@ -1,0 +1,2052 @@
+---
+title: "Building a Simple Dino Game with JavaScript and HTML Canvas"
+author: "Manish Kumar Sah"
+image: "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=1200,height=1200,fit=cover,f=png/9afd3b92ab41ffca7f368a8fcbd6d39a75894efe0edbc14cf1f067cf625e6678/dinosaur-game-logo.png"
+date: "2026-09-14"
+description: "A beginner-friendly guide to building a simple Chrome Dino-style game using JavaScript, HTML Canvas, keyboard controls, gravity, obstacles, collision detection, scoring, and a game loop."
+tags:
+
+- JavaScript
+- HTML
+- Game 
+- Web 
+- Canvas API
+---
+
+# Building a Simple Dino Game with JavaScript and HTML Canvas
+
+Creating a game is one of the best ways to understand how programming concepts work together. Instead of learning JavaScript only through small exercises, we can use it to build something interactive.
+
+In this project, we will build a simple **Dino Game** using **JavaScript and the HTML Canvas API**.
+
+The game is inspired by the famous offline dinosaur game. The player controls a dinosaur that must jump over obstacles. As the player survives, the score increases and the game continues until the dinosaur collides with an obstacle.
+
+We will build the game from scratch without using a game engine or external library.
+
+## What We Will Build
+
+Our game will contain:
+
+* A dinosaur controlled with the keyboard
+* Gravity and jumping physics
+* Moving obstacles
+* Collision detection
+* A continuously increasing score
+* Increasing game difficulty
+* A game-over state
+* Restart functionality
+* A game loop using `requestAnimationFrame()`
+* HTML Canvas rendering
+
+The final project will look conceptually like this:
+
+```text
++------------------------------------------+
+|                    SCORE: 125             |
+|                                          |
+|        🦖                    🌵           |
+|                              🌵          |
+|__________________________________________|
+```
+
+The actual game will be rendered using Canvas.
+
+---
+
+# 1. What Is HTML Canvas?
+
+HTML provides an element called `<canvas>` that allows JavaScript to draw graphics directly in the browser.
+
+A basic canvas looks like this:
+
+```html
+<canvas id="gameCanvas"></canvas>
+```
+
+JavaScript can then access the canvas:
+
+```js
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+```
+
+The `ctx` variable is the **2D rendering context**.
+
+We can use it to draw:
+
+* Rectangles
+* Circles
+* Lines
+* Text
+* Images
+* Shapes
+* Game objects
+
+For example:
+
+```js
+ctx.fillStyle = "black";
+ctx.fillRect(50, 50, 100, 100);
+```
+
+This draws a black rectangle.
+
+Canvas is particularly useful for simple browser games because we can update and redraw the screen many times per second.
+
+---
+
+# 2. Project Structure
+
+We can keep the project very simple:
+
+```text
+dino-game/
+│
+├── index.html
+├── style.css
+└── game.js
+```
+
+The responsibilities are:
+
+```text
+index.html
+    ↓
+Game Canvas
+
+style.css
+    ↓
+Page styling
+
+game.js
+    ↓
+Game logic
+```
+
+---
+
+# 3. Creating the HTML
+
+Create an `index.html` file.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+  <title>Dino Game</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <div class="game-container">
+
+    <h1>Dino Game</h1>
+
+    <canvas
+      id="gameCanvas"
+      width="900"
+      height="300"
+    ></canvas>
+
+    <p>Press SPACE to jump</p>
+
+  </div>
+
+  <script src="game.js"></script>
+
+</body>
+</html>
+```
+
+The important part is the canvas:
+
+```html
+<canvas
+  id="gameCanvas"
+  width="900"
+  height="300"
+></canvas>
+```
+
+Here:
+
+```text
+width  = 900 pixels
+height = 300 pixels
+```
+
+---
+
+# 4. Styling the Game
+
+Create `style.css`.
+
+```css
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: #111;
+
+  font-family: Arial, sans-serif;
+}
+
+.game-container {
+  text-align: center;
+}
+
+h1 {
+  color: white;
+  margin-bottom: 20px;
+}
+
+canvas {
+  display: block;
+
+  background: #f7f7f7;
+
+  border: 2px solid #333;
+
+  max-width: 100%;
+}
+
+p {
+  color: #aaa;
+
+  margin-top: 15px;
+
+  font-size: 16px;
+}
+```
+
+Now we have a basic game area.
+
+---
+
+# 5. Getting the Canvas Context
+
+Create `game.js`.
+
+First, we get the canvas:
+
+```js
+const canvas = document.getElementById("gameCanvas");
+
+const ctx = canvas.getContext("2d");
+```
+
+The canvas itself represents the drawing area.
+
+The context is what allows us to draw inside it.
+
+For example:
+
+```js
+ctx.fillStyle = "red";
+
+ctx.fillRect(
+  100,
+  100,
+  50,
+  50
+);
+```
+
+The arguments are:
+
+```text
+x
+y
+width
+height
+```
+
+---
+
+# 6. Creating the Dino
+
+We need an object to represent our player.
+
+```js
+const dino = {
+  x: 80,
+  y: 220,
+
+  width: 40,
+  height: 50,
+
+  velocityY: 0,
+
+  gravity: 0.8,
+
+  jumpPower: -14,
+
+  grounded: true
+};
+```
+
+The important properties are:
+
+```js
+x
+y
+width
+height
+```
+
+These determine where the dinosaur is located.
+
+The vertical velocity is:
+
+```js
+velocityY
+```
+
+Gravity controls how quickly the dinosaur falls:
+
+```js
+gravity
+```
+
+And:
+
+```js
+jumpPower
+```
+
+determines how strongly the dinosaur jumps.
+
+---
+
+# 7. Drawing the Dino
+
+We can draw the dinosaur using simple rectangles.
+
+```js
+function drawDino() {
+  ctx.fillStyle = "#222";
+
+  ctx.fillRect(
+    dino.x,
+    dino.y,
+    dino.width,
+    dino.height
+  );
+
+
+  ctx.fillRect(
+    dino.x + 25,
+    dino.y - 20,
+    30,
+    30
+  );
+
+
+  ctx.fillStyle = "white";
+
+  ctx.fillRect(
+    dino.x + 45,
+    dino.y - 12,
+    5,
+    5
+  );
+}
+```
+
+This is not a detailed dinosaur sprite, but it is enough to demonstrate how game objects work.
+
+Later, we could replace it with an actual sprite image.
+
+---
+
+# 8. Creating the Ground
+
+The dinosaur needs something to run on.
+
+```js
+const ground = {
+  y: 270,
+  height: 2
+};
+```
+
+We can draw it using:
+
+```js
+function drawGround() {
+  ctx.fillStyle = "#333";
+
+  ctx.fillRect(
+    0,
+    ground.y,
+    canvas.width,
+    ground.height
+  );
+}
+```
+
+The ground stretches across the entire canvas.
+
+---
+
+# 9. Adding Gravity
+
+Gravity is one of the most important parts of the game.
+
+Every frame, we increase the dinosaur's vertical velocity:
+
+```js
+dino.velocityY += dino.gravity;
+```
+
+Then we update its position:
+
+```js
+dino.y += dino.velocityY;
+```
+
+This creates falling motion.
+
+However, the dinosaur should not fall through the ground.
+
+We can check whether it reaches the ground:
+
+```js
+if (dino.y + dino.height >= ground.y) {
+  dino.y = ground.y - dino.height;
+
+  dino.velocityY = 0;
+
+  dino.grounded = true;
+}
+```
+
+Now the dinosaur stops at the ground.
+
+---
+
+# 10. Making the Dino Jump
+
+We can listen for keyboard input.
+
+```js
+document.addEventListener("keydown", (event) => {
+
+  if (event.code === "Space") {
+
+    if (dino.grounded) {
+
+      dino.velocityY = dino.jumpPower;
+
+      dino.grounded = false;
+    }
+
+  }
+
+});
+```
+
+When the user presses the Space key:
+
+```js
+dino.velocityY = -14;
+```
+
+The negative value moves the dinosaur upward.
+
+Gravity then gradually reduces the upward movement and eventually makes the dinosaur fall.
+
+This creates the basic jump:
+
+```text
+       🦖
+      ↑
+      |
+      |
+------|----------------
+```
+
+Then:
+
+```text
+      |
+      |
+      ↓
+     🦖
+-----------------------
+```
+
+---
+
+# 11. Creating Obstacles
+
+Now we need something for the dinosaur to avoid.
+
+We can represent obstacles with objects:
+
+```js
+let obstacles = [];
+```
+
+Each obstacle will contain:
+
+```js
+{
+  x,
+  y,
+  width,
+  height,
+  speed
+}
+```
+
+We can create an obstacle with a function:
+
+```js
+function createObstacle() {
+
+  const height = 40 + Math.random() * 30;
+
+  obstacles.push({
+    x: canvas.width,
+
+    y: ground.y - height,
+
+    width: 25,
+
+    height: height,
+
+    speed: 6
+  });
+}
+```
+
+The obstacle starts at:
+
+```js
+x: canvas.width
+```
+
+This means it appears at the right edge of the screen.
+
+---
+
+# 12. Drawing Obstacles
+
+We can draw each obstacle as a rectangle:
+
+```js
+function drawObstacles() {
+
+  ctx.fillStyle = "#3a7d44";
+
+  obstacles.forEach((obstacle) => {
+
+    ctx.fillRect(
+      obstacle.x,
+      obstacle.y,
+      obstacle.width,
+      obstacle.height
+    );
+
+  });
+}
+```
+
+We could later replace these rectangles with cactus images.
+
+---
+
+# 13. Moving the Obstacles
+
+The obstacles need to move toward the dinosaur.
+
+```js
+function updateObstacles() {
+
+  obstacles.forEach((obstacle) => {
+
+    obstacle.x -= obstacle.speed;
+
+  });
+
+}
+```
+
+Every frame:
+
+```text
+Obstacle → → → → → 🦖
+```
+
+Since the obstacle moves left, it eventually passes the dinosaur.
+
+---
+
+# 14. Removing Old Obstacles
+
+Once an obstacle leaves the screen, there is no reason to keep it in memory.
+
+We can remove it:
+
+```js
+obstacles = obstacles.filter(
+  (obstacle) => obstacle.x + obstacle.width > 0
+);
+```
+
+This prevents the array from growing forever.
+
+---
+
+# 15. Spawning Obstacles
+
+We don't want obstacles to appear continuously.
+
+We can use a timer:
+
+```js
+let obstacleTimer = 0;
+
+function spawnObstacles() {
+
+  obstacleTimer++;
+
+  if (obstacleTimer > 100) {
+
+    createObstacle();
+
+    obstacleTimer = 0;
+  }
+
+}
+```
+
+The timer increases every frame.
+
+When it reaches `100`, a new obstacle is created.
+
+---
+
+# 16. Collision Detection
+
+Collision detection determines whether two objects are touching.
+
+For rectangles, we can use Axis-Aligned Bounding Box collision detection.
+
+Create a function:
+
+```js
+function isColliding(a, b) {
+
+  return (
+    a.x < b.x + b.width &&
+    a.x + a.width > b.x &&
+    a.y < b.y + b.height &&
+    a.y + a.height > b.y
+  );
+
+}
+```
+
+This checks whether the two rectangles overlap.
+
+We can then check every obstacle:
+
+```js
+function checkCollisions() {
+
+  for (const obstacle of obstacles) {
+
+    if (isColliding(dino, obstacle)) {
+
+      gameOver = true;
+
+    }
+
+  }
+
+}
+```
+
+If the dinosaur touches an obstacle:
+
+```js
+gameOver = true;
+```
+
+---
+
+# 17. Creating the Score
+
+Let's add a score variable:
+
+```js
+let score = 0;
+```
+
+Every frame we can increase it:
+
+```js
+score += 0.1;
+```
+
+We can display it:
+
+```js
+function drawScore() {
+
+  ctx.fillStyle = "#222";
+
+  ctx.font = "20px Arial";
+
+  ctx.fillText(
+    `Score: ${Math.floor(score)}`,
+    20,
+    30
+  );
+
+}
+```
+
+`Math.floor()` removes the decimal part.
+
+So:
+
+```text
+25.8
+```
+
+becomes:
+
+```text
+25
+```
+
+---
+
+# 18. Increasing the Difficulty
+
+A simple game becomes more interesting when the difficulty increases.
+
+We can gradually increase the obstacle speed:
+
+```js
+function increaseDifficulty() {
+
+  const speed = 6 + score / 100;
+
+  obstacles.forEach((obstacle) => {
+
+    obstacle.speed = speed;
+
+  });
+
+}
+```
+
+As the score increases:
+
+```text
+Score: 0
+Speed: 6
+
+Score: 100
+Speed: 7
+
+Score: 200
+Speed: 8
+
+Score: 300
+Speed: 9
+```
+
+This makes the game progressively harder.
+
+---
+
+# 19. Creating the Game State
+
+We need to know whether the game is running or finished.
+
+```js
+let gameOver = false;
+```
+
+When a collision occurs:
+
+```js
+gameOver = true;
+```
+
+We can then display a game-over message.
+
+```js
+function drawGameOver() {
+
+  if (!gameOver) {
+    return;
+  }
+
+  ctx.fillStyle = "#222";
+
+  ctx.font = "40px Arial";
+
+  ctx.textAlign = "center";
+
+  ctx.fillText(
+    "GAME OVER",
+    canvas.width / 2,
+    canvas.height / 2
+  );
+
+  ctx.font = "18px Arial";
+
+  ctx.fillText(
+    "Press R to restart",
+    canvas.width / 2,
+    canvas.height / 2 + 40
+  );
+
+  ctx.textAlign = "left";
+}
+```
+
+---
+
+# 20. Restarting the Game
+
+We can listen for the `R` key:
+
+```js
+document.addEventListener("keydown", (event) => {
+
+  if (event.code === "KeyR" && gameOver) {
+
+    restartGame();
+
+  }
+
+});
+```
+
+Then create the restart function:
+
+```js
+function restartGame() {
+
+  dino.y = ground.y - dino.height;
+
+  dino.velocityY = 0;
+
+  dino.grounded = true;
+
+  obstacles = [];
+
+  score = 0;
+
+  obstacleTimer = 0;
+
+  gameOver = false;
+
+}
+```
+
+Now the player can restart without refreshing the browser.
+
+---
+
+# 21. Creating the Game Loop
+
+The game loop is the heart of the game.
+
+A game needs to repeatedly:
+
+```text
+Update
+   ↓
+Draw
+   ↓
+Update
+   ↓
+Draw
+   ↓
+Update
+   ↓
+Draw
+```
+
+We can use:
+
+```js
+requestAnimationFrame()
+```
+
+to create the loop.
+
+A basic loop looks like this:
+
+```js
+function gameLoop() {
+
+  update();
+
+  draw();
+
+  requestAnimationFrame(gameLoop);
+
+}
+
+gameLoop();
+```
+
+The browser calls the function repeatedly.
+
+---
+
+# 22. Updating the Game
+
+Let's create an `update()` function.
+
+```js
+function update() {
+
+  if (gameOver) {
+    return;
+  }
+
+
+  dino.velocityY += dino.gravity;
+
+  dino.y += dino.velocityY;
+
+  if (dino.y + dino.height >= ground.y) {
+
+    dino.y = ground.y - dino.height;
+
+    dino.velocityY = 0;
+
+    dino.grounded = true;
+
+  }
+
+
+  spawnObstacles();
+
+  updateObstacles();
+
+
+  checkCollisions();
+
+
+  score += 0.1;
+
+
+  increaseDifficulty();
+
+}
+```
+
+This function contains the changing parts of the game.
+
+---
+
+# 23. Drawing Everything
+
+The `draw()` function renders the current game state.
+
+```js
+function draw() {
+
+  ctx.clearRect(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
+
+  drawGround();
+
+  drawDino();
+
+  drawObstacles();
+
+  drawScore();
+
+  drawGameOver();
+
+}
+```
+
+First, we clear the canvas:
+
+```js
+ctx.clearRect(
+  0,
+  0,
+  canvas.width,
+  canvas.height
+);
+```
+
+Then we draw everything again.
+
+This happens many times per second.
+
+---
+
+# 24. Complete JavaScript Code
+
+Here is the complete `game.js` file.
+
+```js
+const canvas = document.getElementById("gameCanvas");
+
+const ctx = canvas.getContext("2d");
+
+
+let gameOver = false;
+
+let score = 0;
+
+let obstacleTimer = 0;
+
+let obstacles = [];
+
+
+
+const ground = {
+  y: 270,
+  height: 2
+};
+
+
+
+const dino = {
+
+  x: 80,
+
+  y: 220,
+
+  width: 40,
+
+  height: 50,
+
+  velocityY: 0,
+
+  gravity: 0.8,
+
+  jumpPower: -14,
+
+  grounded: true
+
+};
+
+
+
+function drawDino() {
+
+  ctx.fillStyle = "#222";
+
+
+  ctx.fillRect(
+    dino.x,
+    dino.y,
+    dino.width,
+    dino.height
+  );
+
+
+  ctx.fillRect(
+    dino.x + 25,
+    dino.y - 20,
+    30,
+    30
+  );
+
+
+  ctx.fillStyle = "white";
+
+  ctx.fillRect(
+    dino.x + 45,
+    dino.y - 12,
+    5,
+    5
+  );
+
+}
+
+
+
+function drawGround() {
+
+  ctx.fillStyle = "#333";
+
+  ctx.fillRect(
+    0,
+    ground.y,
+    canvas.width,
+    ground.height
+  );
+
+}
+
+
+
+function createObstacle() {
+
+  const height = 40 + Math.random() * 30;
+
+  obstacles.push({
+
+    x: canvas.width,
+
+    y: ground.y - height,
+
+    width: 25,
+
+    height: height,
+
+    speed: 6
+
+  });
+
+}
+
+
+
+function drawObstacles() {
+
+  ctx.fillStyle = "#3a7d44";
+
+  obstacles.forEach((obstacle) => {
+
+    ctx.fillRect(
+      obstacle.x,
+      obstacle.y,
+      obstacle.width,
+      obstacle.height
+    );
+
+  });
+
+}
+
+
+function spawnObstacles() {
+
+  obstacleTimer++;
+
+  if (obstacleTimer > 100) {
+
+    createObstacle();
+
+    obstacleTimer = 0;
+
+  }
+
+}
+
+
+
+function updateObstacles() {
+
+  obstacles.forEach((obstacle) => {
+
+    obstacle.x -= obstacle.speed;
+
+  });
+
+  obstacles = obstacles.filter(
+    (obstacle) =>
+      obstacle.x + obstacle.width > 0
+  );
+
+}
+
+
+
+function isColliding(a, b) {
+
+  return (
+
+    a.x < b.x + b.width &&
+
+    a.x + a.width > b.x &&
+
+    a.y < b.y + b.height &&
+
+    a.y + a.height > b.y
+
+  );
+
+}
+
+
+function checkCollisions() {
+
+  for (const obstacle of obstacles) {
+
+    if (isColliding(dino, obstacle)) {
+
+      gameOver = true;
+
+      break;
+
+    }
+
+  }
+
+}
+
+
+
+function drawScore() {
+
+  ctx.fillStyle = "#222";
+
+  ctx.font = "20px Arial";
+
+  ctx.fillText(
+    `Score: ${Math.floor(score)}`,
+    20,
+    30
+  );
+
+}
+
+
+
+function increaseDifficulty() {
+
+  const speed = 6 + score / 100;
+
+  obstacles.forEach((obstacle) => {
+
+    obstacle.speed = speed;
+
+  });
+
+}
+
+
+
+function drawGameOver() {
+
+  if (!gameOver) {
+
+    return;
+
+  }
+
+  ctx.fillStyle = "#222";
+
+  ctx.font = "40px Arial";
+
+  ctx.textAlign = "center";
+
+  ctx.fillText(
+    "GAME OVER",
+    canvas.width / 2,
+    canvas.height / 2
+  );
+
+  ctx.font = "18px Arial";
+
+  ctx.fillText(
+    "Press R to restart",
+    canvas.width / 2,
+    canvas.height / 2 + 40
+  );
+
+  ctx.textAlign = "left";
+
+}
+
+
+
+function update() {
+
+  if (gameOver) {
+
+    return;
+
+  }
+
+
+
+  dino.velocityY += dino.gravity;
+
+  dino.y += dino.velocityY;
+
+
+
+  if (dino.y + dino.height >= ground.y) {
+
+    dino.y =
+      ground.y - dino.height;
+
+    dino.velocityY = 0;
+
+    dino.grounded = true;
+
+  }
+
+
+
+  spawnObstacles();
+
+  updateObstacles();
+
+
+
+  checkCollisions();
+
+
+
+  score += 0.1;
+
+
+
+  increaseDifficulty();
+
+}
+
+
+
+function draw() {
+
+  ctx.clearRect(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
+
+  drawGround();
+
+  drawDino();
+
+  drawObstacles();
+
+  drawScore();
+
+  drawGameOver();
+
+}
+
+
+
+document.addEventListener(
+  "keydown",
+  (event) => {
+
+
+    if (
+      event.code === "Space" &&
+      dino.grounded &&
+      !gameOver
+    ) {
+
+      dino.velocityY =
+        dino.jumpPower;
+
+      dino.grounded = false;
+
+    }
+
+
+
+    if (
+      event.code === "KeyR" &&
+      gameOver
+    ) {
+
+      restartGame();
+
+    }
+
+  }
+);
+
+
+
+function restartGame() {
+
+  dino.y =
+    ground.y - dino.height;
+
+  dino.velocityY = 0;
+
+  dino.grounded = true;
+
+  obstacles = [];
+
+  score = 0;
+
+  obstacleTimer = 0;
+
+  gameOver = false;
+
+}
+
+
+
+function gameLoop() {
+
+  update();
+
+  draw();
+
+  requestAnimationFrame(gameLoop);
+
+}
+
+
+gameLoop();
+```
+
+---
+
+# 25. How the Game Works
+
+The complete game can be understood as a series of steps.
+
+```text
+Keyboard Input
+      ↓
+   Update
+      ↓
+Physics + Obstacles
+      ↓
+Collision Detection
+      ↓
+    Drawing
+      ↓
+requestAnimationFrame
+      ↓
+    Update
+      ↓
+      ...
+```
+
+The game loop continuously repeats this process.
+
+---
+
+# 26. Understanding the Physics
+
+The jumping system is based on velocity and gravity.
+
+When the player jumps:
+
+```js
+dino.velocityY = -14;
+```
+
+The dinosaur moves upward.
+
+Every frame:
+
+```js
+dino.velocityY += dino.gravity;
+```
+
+Gravity makes the velocity increasingly positive.
+
+For example:
+
+```text
+Frame 1: -14
+Frame 2: -13.2
+Frame 3: -12.4
+Frame 4: -11.6
+...
+Frame 17: ~0
+Frame 18: positive
+Frame 19: falling
+```
+
+This creates a natural jump arc.
+
+---
+
+# 27. Why `requestAnimationFrame()`?
+
+We could theoretically use:
+
+```js
+setInterval()
+```
+
+for a game loop.
+
+However, `requestAnimationFrame()` is designed for browser animations.
+
+```js
+requestAnimationFrame(gameLoop);
+```
+
+It allows the browser to schedule rendering efficiently.
+
+The general pattern is:
+
+```js
+function gameLoop() {
+
+  update();
+
+  draw();
+
+  requestAnimationFrame(gameLoop);
+
+}
+```
+
+This pattern is useful beyond this project.
+
+Many JavaScript canvas games follow a similar architecture.
+
+---
+
+# 28. Improving the Dinosaur
+
+The current dinosaur is made from rectangles:
+
+```js
+ctx.fillRect(...)
+```
+
+A better version could use an image.
+
+For example:
+
+```js
+const dinoImage = new Image();
+
+dinoImage.src = "assets/dino.png";
+```
+
+Then:
+
+```js
+ctx.drawImage(
+  dinoImage,
+  dino.x,
+  dino.y,
+  dino.width,
+  dino.height
+);
+```
+
+This allows us to create a proper pixel-art dinosaur.
+
+---
+
+# 29. Adding Animation
+
+We can create multiple dinosaur frames:
+
+```text
+dino-1.png
+dino-2.png
+dino-3.png
+dino-4.png
+```
+
+Then change the frame over time.
+
+```js
+let animationFrame = 0;
+
+animationFrame++;
+```
+
+We could select an image based on:
+
+```js
+Math.floor(animationFrame / 10) % 4
+```
+
+This creates a simple running animation.
+
+---
+
+# 30. Adding Clouds
+
+We can also add background objects.
+
+For example:
+
+```js
+const clouds = [
+  {
+    x: 200,
+    y: 60,
+    width: 80,
+    height: 20
+  },
+  {
+    x: 500,
+    y: 100,
+    width: 100,
+    height: 20
+  }
+];
+```
+
+Then draw them:
+
+```js
+function drawClouds() {
+
+  ctx.fillStyle = "#ddd";
+
+  clouds.forEach((cloud) => {
+
+    ctx.fillRect(
+      cloud.x,
+      cloud.y,
+      cloud.width,
+      cloud.height
+    );
+
+  });
+
+}
+```
+
+We can also move them slowly to create a parallax effect.
+
+---
+
+# 31. Adding Sound
+
+A game becomes more interactive when it has sound.
+
+We could create:
+
+```js
+const jumpSound =
+  new Audio("assets/jump.wav");
+
+const hitSound =
+  new Audio("assets/hit.wav");
+```
+
+Then play the jump sound:
+
+```js
+jumpSound.currentTime = 0;
+
+jumpSound.play();
+```
+
+And when the player hits an obstacle:
+
+```js
+hitSound.play();
+```
+
+Modern browsers may restrict automatic audio playback, so sounds should generally be triggered by user interaction.
+
+---
+
+# 32. Adding a Start Screen
+
+Instead of immediately starting the game, we could introduce a start state:
+
+```js
+let gameStarted = false;
+```
+
+Then display:
+
+```text
+DINO GAME
+
+Press SPACE to Start
+```
+
+When Space is pressed:
+
+```js
+gameStarted = true;
+```
+
+This gives the game a more complete structure:
+
+```text
+START
+  ↓
+PLAYING
+  ↓
+GAME OVER
+  ↓
+RESTART
+  ↓
+PLAYING
+```
+
+---
+
+# 33. Better Game Architecture
+
+As the game becomes larger, we can separate the code into different modules.
+
+For example:
+
+```text
+src/
+│
+├── game.js
+├── player.js
+├── obstacle.js
+├── input.js
+├── collision.js
+├── renderer.js
+└── audio.js
+```
+
+Each module can have a specific responsibility.
+
+For example:
+
+```text
+player.js
+    ↓
+Player movement
+
+obstacle.js
+    ↓
+Obstacle generation
+
+collision.js
+    ↓
+Collision detection
+
+renderer.js
+    ↓
+Canvas drawing
+
+input.js
+    ↓
+Keyboard controls
+```
+
+This makes larger games easier to maintain.
+
+---
+
+# 34. Ideas for Improvements
+
+Once the basic version works, there are many things we can add.
+
+### Better graphics
+
+Replace rectangles with sprites.
+
+### Multiple obstacles
+
+Create different cactus types:
+
+```text
+Small cactus
+Large cactus
+Double cactus
+Triple cactus
+```
+
+### Day and night
+
+Change the background based on the score.
+
+```text
+Day
+ ↓
+Sunset
+ ↓
+Night
+```
+
+### High score
+
+Store the best score:
+
+```js
+localStorage.setItem(
+  "highScore",
+  score
+);
+```
+
+Retrieve it with:
+
+```js
+localStorage.getItem("highScore");
+```
+
+### Mobile controls
+
+Add a button:
+
+```html
+<button id="jumpButton">
+  Jump
+</button>
+```
+
+Then:
+
+```js
+jumpButton.addEventListener(
+  "click",
+  jump
+);
+```
+
+### Pause
+
+Add:
+
+```js
+let paused = false;
+```
+
+Then stop updating while paused.
+
+### Particles
+
+Create small particles when the dinosaur lands or hits an obstacle.
+
+### Power-ups
+
+Examples:
+
+```text
+Shield
+Double Score
+Slow Motion
+Invincibility
+```
+
+---
+
+# 35. Possible Final Project Structure
+
+After adding more features, the project could look like:
+
+```text
+dino-game/
+│
+├── index.html
+├── style.css
+│
+├── assets/
+│   ├── dino.png
+│   ├── cactus.png
+│   ├── cloud.png
+│   ├── jump.wav
+│   └── hit.wav
+│
+└── js/
+    ├── game.js
+    ├── player.js
+    ├── obstacle.js
+    ├── input.js
+    ├── collision.js
+    └── audio.js
+```
+
+This is much easier to scale than putting every feature into one JavaScript file.
+
+---
+
+# 36. What This Project Teaches
+
+Although the game is simple, it introduces several important programming concepts.
+
+### JavaScript
+
+We use:
+
+* Objects
+* Arrays
+* Functions
+* Loops
+* Events
+* Conditions
+* Variables
+* Math
+* DOM APIs
+
+### Game Development
+
+We learn:
+
+* Game loops
+* Game states
+* Physics
+* Gravity
+* Velocity
+* Collision detection
+* Spawning
+* Animation
+* Scoring
+
+### Canvas
+
+We learn:
+
+* Rendering
+* Shapes
+* Text
+* Coordinates
+* Animation
+* Redrawing
+
+These concepts can later be applied to much larger games.
+
+---
+
+# 37. From a Dino Game to Larger Games
+
+The architecture used here is not limited to a dinosaur game.
+
+The same concepts can be used to build:
+
+```text
+Dino Game
+    ↓
+Platformer
+    ↓
+2D Adventure Game
+    ↓
+2D RPG
+    ↓
+Canvas-based Game Engine
+```
+
+For example, a platformer would add:
+
+```text
+Player
+Platforms
+Gravity
+Jumping
+Enemies
+Coins
+Camera
+Levels
+```
+
+A top-down game could instead use:
+
+```text
+Player
+Enemies
+Map
+Weapons
+Health
+Items
+Collision
+```
+
+The fundamental ideas remain similar.
+
+---
+
+# 38. What I Learned from Building This Project
+
+Building a small game is different from writing isolated JavaScript programs.
+
+In a normal JavaScript exercise, we might write a function and see its result immediately.
+
+A game continuously changes over time.
+
+For example:
+
+```text
+Input
+  ↓
+Physics
+  ↓
+Game State
+  ↓
+Collision
+  ↓
+Rendering
+  ↓
+Input
+  ↓
+...
+```
+
+This makes game development a useful way to understand how different programming concepts interact.
+
+The Dino Game is small enough to understand but complex enough to introduce real game-development concepts.
+
+---
+
+# 39. Conclusion
+
+The Dino Game is a simple but useful JavaScript project for learning game development.
+
+We started with a basic HTML Canvas and gradually added:
+
+```text
+Canvas
+  ↓
+Player
+  ↓
+Gravity
+  ↓
+Jumping
+  ↓
+Obstacles
+  ↓
+Collision Detection
+  ↓
+Score
+  ↓
+Difficulty
+  ↓
+Game Over
+  ↓
+Restart
+```
+
+The most important concept is the **game loop**:
+
+```js
+function gameLoop() {
+
+  update();
+
+  draw();
+
+  requestAnimationFrame(gameLoop);
+
+}
+```
+
+Once this pattern becomes familiar, creating other browser games becomes much easier.
+
+This project can also serve as a foundation for more advanced projects involving sprites, animation, sound, particles, levels, enemies, power-ups, and eventually dedicated game engines such as Unity.
+
+The goal of a project like this is not simply to create a dinosaur that jumps over a cactus. It is to understand how **input, logic, physics, rendering, and game state work together to create an interactive application**.

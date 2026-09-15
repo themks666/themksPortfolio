@@ -1,0 +1,3408 @@
+---
+title: "Next.js: The Complete Guide to Building Modern Web Applications"
+author: "Manish Kumar Sah"
+date: "2026-09-10"
+description: "A comprehensive guide to Next.js covering the App Router, Server and Client Components, routing, data fetching, Server Actions, API routes, authentication, caching, SEO, performance, databases, and deployment."
+tags:
+
+  - React
+  - Next.js
+  - TypeScript
+  - JavaScript
+  - Web Development
+  - Full Stack Development
+  - Server Components
+  - App Router
+
+---
+
+
+# Next.js: The Complete Guide to Building Modern Web Applications
+
+Next.js is a React framework for building modern, production-ready web applications.
+
+It extends React with features that are commonly required when building complete applications, including:
+
+* File-based routing
+* Nested layouts
+* Server Components
+* Client Components
+* Server-side rendering
+* Static generation
+* Dynamic rendering
+* Data fetching
+* Caching
+* Server Actions
+* API endpoints
+* Dynamic routes
+* Middleware and request interception
+* Image optimization
+* Font optimization
+* Metadata and SEO
+* Error handling
+* Loading states
+* Authentication patterns
+* Database integration
+* Full-stack application development
+* Production deployment
+
+Instead of combining React with many separate libraries and configuration files, Next.js provides an opinionated application structure that allows developers to build both the frontend and backend parts of an application in the same project.
+
+This guide starts with the fundamentals and gradually moves toward advanced Next.js concepts.
+
+---
+
+# Table of Contents
+
+1. [What Is Next.js?](#what-is-nextjs)
+2. [Why Use Next.js?](#why-use-nextjs)
+3. [Next.js vs React](#nextjs-vs-react)
+4. [Creating a Next.js Application](#creating-a-nextjs-application)
+5. [Understanding the Project Structure](#understanding-the-project-structure)
+6. [The App Router](#the-app-router)
+7. [Pages and Routes](#pages-and-routes)
+8. [Layouts](#layouts)
+9. [Nested Routes](#nested-routes)
+10. [Dynamic Routes](#dynamic-routes)
+11. [Catch-All Routes](#catch-all-routes)
+12. [Route Groups](#route-groups)
+13. [Linking Between Pages](#linking-between-pages)
+14. [Server Components](#server-components)
+15. [Client Components](#client-components)
+16. [When to Use Client Components](#when-to-use-client-components)
+17. [Fetching Data](#fetching-data)
+18. [Fetching Data From an API](#fetching-data-from-an-api)
+19. [Fetching Data From a Database](#fetching-data-from-a-database)
+20. [Loading UI](#loading-ui)
+21. [Error Handling](#error-handling)
+22. [Not Found Pages](#not-found-pages)
+23. [Metadata and SEO](#metadata-and-seo)
+24. [Images](#images)
+25. [Fonts](#fonts)
+26. [Environment Variables](#environment-variables)
+27. [Route Handlers](#route-handlers)
+28. [HTTP Methods](#http-methods)
+29. [Request and Response](#request-and-response)
+30. [Server Actions](#server-actions)
+31. [Forms](#forms)
+32. [Cookies](#cookies)
+33. [Authentication](#authentication)
+34. [Caching](#caching)
+35. [Revalidation](#revalidation)
+36. [Middleware and Request Interception](#middleware-and-request-interception)
+37. [Search Parameters](#search-parameters)
+38. [Pagination](#pagination)
+39. [Parallel Data Fetching](#parallel-data-fetching)
+40. [Sequential Data Fetching](#sequential-data-fetching)
+41. [Streaming](#streaming)
+42. [Suspense](#suspense)
+43. [Project Organization](#project-organization)
+44. [Reusable Components](#reusable-components)
+45. [TypeScript With Next.js](#typescript-with-nextjs)
+46. [Database Integration](#database-integration)
+47. [Building a Full-Stack Application](#building-a-full-stack-application)
+48. [Security Considerations](#security-considerations)
+49. [Performance Optimization](#performance-optimization)
+50. [Deployment](#deployment)
+51. [Common Mistakes](#common-mistakes)
+52. [Recommended Project Structure](#recommended-project-structure)
+53. [Conclusion](#conclusion)
+
+---
+
+# What Is Next.js?
+
+Next.js is a framework built on top of React.
+
+React provides the tools for creating user interfaces, while Next.js adds application-level features.
+
+A traditional React application may require additional libraries for:
+
+* Routing
+* SEO
+* Server-side rendering
+* API development
+* Image optimization
+* Font optimization
+* Data fetching
+* Application structure
+* Deployment
+* Backend integration
+
+Next.js provides solutions for many of these requirements directly inside the framework.
+
+A simplified React application might look like this:
+
+```jsx
+function App() {
+  return (
+    <main>
+      <h1>Hello World</h1>
+    </main>
+  );
+}
+
+export default App;
+```
+
+A Next.js application can use the same React components while also providing routing, layouts, server rendering, API routes, and many other features.
+
+---
+
+# Why Use Next.js?
+
+Next.js is popular because it allows developers to build complete applications rather than only isolated user interfaces.
+
+## 1. File-Based Routing
+
+Routes can be created by creating files and folders.
+
+```text
+app/
+├── page.jsx
+├── about/
+│   └── page.jsx
+└── contact/
+    └── page.jsx
+```
+
+This produces:
+
+```text
+/
+/about
+/contact
+```
+
+No separate router configuration is required.
+
+---
+
+## 2. Server Components
+
+Next.js uses React Server Components by default in the App Router.
+
+This allows components to execute on the server and send only the required UI to the browser.
+
+---
+
+## 3. Client Components
+
+Interactive components can be converted into Client Components when browser-side JavaScript is required.
+
+```jsx
+"use client";
+
+import { useState } from "react";
+
+export default function Counter() {
+  const [count, setCount] = useState(0);
+
+  return (
+    <button onClick={() => setCount(count + 1)}>
+      Count: {count}
+    </button>
+  );
+}
+```
+
+---
+
+## 4. Full-Stack Development
+
+Next.js can contain both frontend and backend functionality.
+
+For example:
+
+```text
+Next.js Application
+│
+├── UI
+├── Pages
+├── Components
+├── Server Components
+├── Server Actions
+├── API Routes
+└── Database
+```
+
+This makes Next.js suitable for applications such as:
+
+* Blogs
+* E-commerce websites
+* Dashboards
+* Social media platforms
+* SaaS applications
+* Portfolio websites
+* Admin panels
+* Content management systems
+
+---
+
+# Next.js vs React
+
+React and Next.js are not direct competitors.
+
+React is a UI library.
+
+Next.js is a framework built around React.
+
+| Feature             | React                             | Next.js                 |
+| ------------------- | --------------------------------- | ----------------------- |
+| UI Components       | Yes                               | Yes                     |
+| Routing             | External library usually required | Built in                |
+| Server Components   | React feature                     | First-class integration |
+| API Routes          | No                                | Yes                     |
+| Server Rendering    | Requires setup/framework          | Built in                |
+| Static Generation   | Requires setup/framework          | Built in                |
+| Image Optimization  | External solution                 | Built in                |
+| Metadata APIs       | External/manual                   | Built in                |
+| Full-Stack Features | Limited                           | Yes                     |
+
+A useful way to think about it is:
+
+```text
+React
+  ↓
+User Interface
+
+Next.js
+  ↓
+React
+  +
+Routing
+  +
+Server Rendering
+  +
+Backend Features
+  +
+Optimization
+  +
+Deployment
+```
+
+---
+
+# Creating a Next.js Application
+
+The recommended way to start a new Next.js application is with the project creation command.
+
+```bash
+npx create-next-app@latest my-next-app
+```
+
+Move into the project:
+
+```bash
+cd my-next-app
+```
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+The application will normally be available at:
+
+```text
+http://localhost:3000
+```
+
+---
+
+# Project Structure
+
+A typical Next.js application using the App Router may look like:
+
+```text
+my-next-app/
+│
+├── app/
+│   ├── layout.tsx
+│   ├── page.tsx
+│   ├── globals.css
+│   │
+│   ├── about/
+│   │   └── page.tsx
+│   │
+│   ├── blog/
+│   │   ├── page.tsx
+│   │   └── [slug]/
+│   │       └── page.tsx
+│   │
+│   └── api/
+│       └── users/
+│           └── route.ts
+│
+├── components/
+│   ├── Navbar.tsx
+│   ├── Footer.tsx
+│   └── Button.tsx
+│
+├── public/
+│   ├── images/
+│   └── icons/
+│
+├── lib/
+│   ├── db.ts
+│   └── utils.ts
+│
+├── package.json
+├── next.config.ts
+├── tsconfig.json
+└── .env.local
+```
+
+Each directory generally has a specific responsibility.
+
+---
+
+# The App Router
+
+Modern Next.js applications use the App Router.
+
+The App Router is based on the `app` directory.
+
+For example:
+
+```text
+app/
+├── page.tsx
+├── about/
+│   └── page.tsx
+└── dashboard/
+    └── page.tsx
+```
+
+The routes become:
+
+```text
+/
+/about
+/dashboard
+```
+
+---
+
+# Pages and Routes
+
+A `page.tsx` file represents a route.
+
+Example:
+
+```tsx
+export default function HomePage() {
+  return (
+    <main>
+      <h1>Welcome to my website</h1>
+    </main>
+  );
+}
+```
+
+The file:
+
+```text
+app/page.tsx
+```
+
+represents:
+
+```text
+/
+```
+
+Now create:
+
+```text
+app/about/page.tsx
+```
+
+```tsx
+export default function AboutPage() {
+  return (
+    <main>
+      <h1>About Me</h1>
+      <p>This is my about page.</p>
+    </main>
+  );
+}
+```
+
+This creates:
+
+```text
+/about
+```
+
+---
+
+# Layouts
+
+Layouts allow you to share UI between multiple pages.
+
+The root layout is:
+
+```text
+app/layout.tsx
+```
+
+Example:
+
+```tsx
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en">
+      <body>
+        <header>
+          <nav>
+            <a href="/">Home</a>
+            <a href="/about">About</a>
+          </nav>
+        </header>
+
+        {children}
+
+        <footer>
+          <p>© 2026 My Website</p>
+        </footer>
+      </body>
+    </html>
+  );
+}
+```
+
+The `children` represents the current page.
+
+For example:
+
+```text
+RootLayout
+│
+├── Header
+│
+├── Current Page
+│
+└── Footer
+```
+
+---
+
+# Nested Layouts
+
+Layouts can also be nested.
+
+Consider:
+
+```text
+app/
+├── layout.tsx
+├── page.tsx
+└── dashboard/
+    ├── layout.tsx
+    ├── page.tsx
+    └── settings/
+        └── page.tsx
+```
+
+The dashboard layout can contain a sidebar.
+
+```tsx
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="dashboard">
+      <aside>
+        <nav>
+          <a href="/dashboard">Dashboard</a>
+          <a href="/dashboard/settings">Settings</a>
+        </nav>
+      </aside>
+
+      <main>{children}</main>
+    </section>
+  );
+}
+```
+
+Both dashboard pages will use this layout.
+
+---
+
+# Nested Routes
+
+Folders can be nested to create nested URLs.
+
+```text
+app/
+└── dashboard/
+    └── analytics/
+        └── page.tsx
+```
+
+This creates:
+
+```text
+/dashboard/analytics
+```
+
+You can create deeply nested routes:
+
+```text
+app/
+└── admin/
+    └── users/
+        └── settings/
+            └── page.tsx
+```
+
+URL:
+
+```text
+/admin/users/settings
+```
+
+---
+
+# Dynamic Routes
+
+Dynamic routes are useful when the URL contains a variable value.
+
+For example:
+
+```text
+/blog/hello-nextjs
+/blog/learn-react
+/blog/nextjs-server-components
+```
+
+Create:
+
+```text
+app/blog/[slug]/page.tsx
+```
+
+Then:
+
+```tsx
+export default async function BlogPost({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+
+  return (
+    <main>
+      <h1>Blog Post</h1>
+      <p>Slug: {slug}</p>
+    </main>
+  );
+}
+```
+
+Visiting:
+
+```text
+/blog/hello-nextjs
+```
+
+gives:
+
+```text
+hello-nextjs
+```
+
+as the `slug`.
+
+---
+
+# Dynamic Routes With Data
+
+Dynamic routes become especially useful when retrieving data.
+
+```tsx
+const posts = {
+  "nextjs-guide": {
+    title: "Complete Next.js Guide",
+    content: "Learn Next.js from beginner to advanced.",
+  },
+  "react-guide": {
+    title: "React Guide",
+    content: "Learn React fundamentals.",
+  },
+};
+
+export default async function PostPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+
+  const post = posts[slug as keyof typeof posts];
+
+  if (!post) {
+    return <h1>Post not found</h1>;
+  }
+
+  return (
+    <article>
+      <h1>{post.title}</h1>
+      <p>{post.content}</p>
+    </article>
+  );
+}
+```
+
+---
+
+# Catch-All Routes
+
+A catch-all route uses:
+
+```text
+[...slug]
+```
+
+Example:
+
+```text
+app/docs/[...slug]/page.tsx
+```
+
+It can match:
+
+```text
+/docs/react
+/docs/react/hooks
+/docs/react/hooks/use-state
+```
+
+Example:
+
+```tsx
+export default async function DocsPage({
+  params,
+}: {
+  params: Promise<{ slug: string[] }>;
+}) {
+  const { slug } = await params;
+
+  return (
+    <main>
+      <h1>Documentation</h1>
+
+      <p>{slug.join(" / ")}</p>
+    </main>
+  );
+}
+```
+
+---
+
+# Route Groups
+
+Route groups allow you to organize routes without changing the URL.
+
+Create:
+
+```text
+app/
+├── (marketing)/
+│   ├── about/
+│   │   └── page.tsx
+│   └── pricing/
+│       └── page.tsx
+│
+└── (dashboard)/
+    └── dashboard/
+        └── page.tsx
+```
+
+The parentheses indicate that the folder is a route group.
+
+The URL for:
+
+```text
+app/(marketing)/about/page.tsx
+```
+
+is still:
+
+```text
+/about
+```
+
+The `(marketing)` part is not included in the URL.
+
+---
+
+# Linking Between Pages
+
+Next.js provides the `Link` component.
+
+```tsx
+import Link from "next/link";
+
+export default function HomePage() {
+  return (
+    <main>
+      <h1>Home</h1>
+
+      <Link href="/about">
+        Go to About
+      </Link>
+    </main>
+  );
+}
+```
+
+You can also link to dynamic routes:
+
+```tsx
+<Link href="/blog/nextjs-guide">
+  Read Next.js Guide
+</Link>
+```
+
+Using `Link` is preferred over regular anchor tags for internal navigation.
+
+---
+
+# Server Components
+
+Server Components are a major part of modern Next.js.
+
+Components inside the App Router are Server Components by default.
+
+Example:
+
+```tsx
+export default async function UsersPage() {
+  const response = await fetch(
+    "https://api.example.com/users"
+  );
+
+  const users = await response.json();
+
+  return (
+    <main>
+      <h1>Users</h1>
+
+      {users.map((user: any) => (
+        <div key={user.id}>
+          {user.name}
+        </div>
+      ))}
+    </main>
+  );
+}
+```
+
+This component can execute on the server.
+
+---
+
+# Advantages of Server Components
+
+Server Components can be useful because they:
+
+* Reduce client-side JavaScript
+* Can access server-side resources
+* Can query databases directly
+* Keep secrets away from the browser
+* Can perform server-side data fetching
+* Improve initial rendering strategies
+
+For example, database credentials should never be exposed to the browser.
+
+A Server Component can communicate with the database on the server.
+
+```text
+Browser
+   │
+   ▼
+Next.js Server
+   │
+   ▼
+Database
+```
+
+Instead of:
+
+```text
+Browser
+   │
+   ▼
+Database
+```
+
+which would expose credentials and create security problems.
+
+---
+
+# Client Components
+
+Server Components cannot directly use browser-specific features such as:
+
+* `useState`
+* `useEffect`
+* `useRef`
+* Browser event handlers
+* Certain browser APIs
+
+When you need these features, use a Client Component.
+
+```tsx
+"use client";
+
+import { useState } from "react";
+
+export default function Counter() {
+  const [count, setCount] = useState(0);
+
+  return (
+    <button onClick={() => setCount(count + 1)}>
+      Count: {count}
+    </button>
+  );
+}
+```
+
+The `"use client"` directive tells Next.js that this component should run on the client.
+
+---
+
+# When to Use Client Components
+
+Use Client Components when you need:
+
+```text
+useState
+useEffect
+useReducer
+useRef
+onClick
+onChange
+onSubmit
+Browser APIs
+Interactive UI
+```
+
+For example:
+
+```tsx
+"use client";
+
+import { useState } from "react";
+
+export default function SearchBox() {
+  const [query, setQuery] = useState("");
+
+  return (
+    <input
+      value={query}
+      onChange={(event) => setQuery(event.target.value)}
+      placeholder="Search..."
+    />
+  );
+}
+```
+
+---
+
+# Server vs Client Components
+
+A useful rule is:
+
+```text
+Server Component
+    ↓
+Data fetching
+Database access
+Sensitive operations
+Static UI
+
+Client Component
+    ↓
+State
+Events
+Browser APIs
+Interactive UI
+```
+
+Avoid turning the entire application into Client Components unnecessarily.
+
+Instead, keep most of the application on the server and introduce Client Components only where interaction requires them.
+
+---
+
+# Fetching Data
+
+Next.js allows Server Components to fetch data directly.
+
+```tsx
+export default async function ProductsPage() {
+  const response = await fetch(
+    "https://api.example.com/products"
+  );
+
+  const products = await response.json();
+
+  return (
+    <main>
+      <h1>Products</h1>
+
+      {products.map((product: any) => (
+        <article key={product.id}>
+          <h2>{product.name}</h2>
+          <p>${product.price}</p>
+        </article>
+      ))}
+    </main>
+  );
+}
+```
+
+Because the component is asynchronous, it can wait for the data before rendering.
+
+---
+
+# Fetching Data From an API
+
+Suppose your API returns:
+
+```json
+[
+  {
+    "id": 1,
+    "name": "Laptop"
+  },
+  {
+    "id": 2,
+    "name": "Keyboard"
+  }
+]
+```
+
+You can fetch it like:
+
+```tsx
+async function getProducts() {
+  const response = await fetch(
+    "https://api.example.com/products"
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch products");
+  }
+
+  return response.json();
+}
+
+export default async function ProductsPage() {
+  const products = await getProducts();
+
+  return (
+    <main>
+      {products.map((product: any) => (
+        <div key={product.id}>
+          {product.name}
+        </div>
+      ))}
+    </main>
+  );
+}
+```
+
+Always check whether a request succeeded when appropriate.
+
+---
+
+# Fetching Data From a Database
+
+One major benefit of Server Components is that server-only code can stay on the server.
+
+For example, suppose you have a database utility:
+
+```ts
+import { prisma } from "@/lib/prisma";
+
+export async function getUsers() {
+  return prisma.user.findMany();
+}
+```
+
+Then:
+
+```tsx
+import { getUsers } from "@/lib/users";
+
+export default async function UsersPage() {
+  const users = await getUsers();
+
+  return (
+    <main>
+      <h1>Users</h1>
+
+      {users.map((user) => (
+        <div key={user.id}>
+          {user.name}
+        </div>
+      ))}
+    </main>
+  );
+}
+```
+
+The browser does not need to receive your database credentials.
+
+---
+
+# Loading UI
+
+Next.js supports special `loading.tsx` files.
+
+Example:
+
+```text
+app/
+└── dashboard/
+    ├── loading.tsx
+    └── page.tsx
+```
+
+`loading.tsx`:
+
+```tsx
+export default function Loading() {
+  return (
+    <div>
+      <p>Loading dashboard...</p>
+    </div>
+  );
+}
+```
+
+This can be displayed while the dashboard content is loading.
+
+A more polished version:
+
+```tsx
+export default function Loading() {
+  return (
+    <div className="flex min-h-screen items-center justify-center">
+      <div className="h-10 w-10 animate-spin rounded-full border-4 border-gray-300 border-t-black" />
+    </div>
+  );
+}
+```
+
+---
+
+# Error Handling
+
+Next.js supports special error files.
+
+Create:
+
+```text
+app/
+└── dashboard/
+    ├── error.tsx
+    └── page.tsx
+```
+
+Because error components need interactivity, they are Client Components.
+
+```tsx
+"use client";
+
+export default function Error({
+  reset,
+}: {
+  error: Error & { digest?: string };
+  reset: () => void;
+}) {
+  return (
+    <div>
+      <h2>Something went wrong.</h2>
+
+      <button onClick={() => reset()}>
+        Try again
+      </button>
+    </div>
+  );
+}
+```
+
+The `reset()` function can attempt to render the affected route again.
+
+---
+
+# Not Found Pages
+
+You can create:
+
+```text
+app/not-found.tsx
+```
+
+Example:
+
+```tsx
+export default function NotFound() {
+  return (
+    <main>
+      <h1>404</h1>
+      <p>The page you are looking for does not exist.</p>
+    </main>
+  );
+}
+```
+
+For dynamic routes, you can use `notFound()`.
+
+```tsx
+import { notFound } from "next/navigation";
+
+export default async function PostPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+
+  const post = await getPost(slug);
+
+  if (!post) {
+    notFound();
+  }
+
+  return (
+    <article>
+      <h1>{post.title}</h1>
+    </article>
+  );
+}
+```
+
+---
+
+# Metadata and SEO
+
+Next.js provides a metadata API.
+
+Static metadata:
+
+```tsx
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "My Blog",
+  description: "A blog built with Next.js",
+};
+
+export default function HomePage() {
+  return <h1>My Blog</h1>;
+}
+```
+
+You can also define metadata dynamically.
+
+```tsx
+import type { Metadata } from "next";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+
+  const post = await getPost(slug);
+
+  return {
+    title: post.title,
+    description: post.description,
+  };
+}
+```
+
+This is particularly useful for blogs and e-commerce applications.
+
+---
+
+# Open Graph Metadata
+
+You can also provide Open Graph information.
+
+```tsx
+export const metadata = {
+  title: "Next.js Guide",
+  description: "Learn Next.js",
+  openGraph: {
+    title: "Next.js Guide",
+    description: "Learn Next.js from beginner to advanced",
+    images: ["/images/nextjs-guide.png"],
+  },
+};
+```
+
+This helps when pages are shared on social platforms.
+
+---
+
+# Images
+
+Next.js provides the `Image` component.
+
+```tsx
+import Image from "next/image";
+
+export default function Profile() {
+  return (
+    <Image
+      src="/profile.jpg"
+      alt="Profile"
+      width={500}
+      height={500}
+    />
+  );
+}
+```
+
+For responsive images, you can use:
+
+```tsx
+<Image
+  src="/hero.jpg"
+  alt="Hero image"
+  width={1200}
+  height={700}
+  priority
+/>
+```
+
+You can also use remote images after configuring the appropriate image source in your Next.js configuration.
+
+---
+
+# Fonts
+
+Next.js provides font optimization through `next/font`.
+
+Example:
+
+```tsx
+import { Geist } from "next/font/google";
+
+const geist = Geist({
+  subsets: ["latin"],
+});
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en">
+      <body className={geist.className}>
+        {children}
+      </body>
+    </html>
+  );
+}
+```
+
+This makes font loading easier to manage.
+
+---
+
+# Environment Variables
+
+Environment variables are useful for storing configuration and secrets.
+
+Create:
+
+```text
+.env.local
+```
+
+Example:
+
+```env
+DATABASE_URL="your-database-url"
+JWT_SECRET="your-secret"
+API_URL="https://api.example.com"
+```
+
+Server-side variables can be accessed using:
+
+```ts
+const databaseUrl = process.env.DATABASE_URL;
+```
+
+Variables intended to be exposed to browser code generally use:
+
+```env
+NEXT_PUBLIC_API_URL="https://api.example.com"
+```
+
+Do not place secrets inside `NEXT_PUBLIC_*` variables.
+
+For example, this is dangerous:
+
+```env
+NEXT_PUBLIC_DATABASE_PASSWORD="secret"
+```
+
+Public environment variables can be included in client-side code.
+
+---
+
+# Route Handlers
+
+Route Handlers allow you to create backend HTTP endpoints.
+
+Create:
+
+```text
+app/api/users/route.ts
+```
+
+Then:
+
+```ts
+import { NextResponse } from "next/server";
+
+export async function GET() {
+  return NextResponse.json({
+    message: "Users endpoint",
+  });
+}
+```
+
+You can access:
+
+```text
+/api/users
+```
+
+---
+
+# POST Route Handler
+
+```ts
+import { NextResponse } from "next/server";
+
+export async function POST(request: Request) {
+  const body = await request.json();
+
+  return NextResponse.json({
+    message: "User created",
+    user: body,
+  });
+}
+```
+
+A client could send:
+
+```json
+{
+  "name": "Manish",
+  "email": "manish@example.com"
+}
+```
+
+---
+
+# HTTP Methods
+
+Route Handlers can support common HTTP methods.
+
+```ts
+export async function GET() {
+  return Response.json({
+    message: "GET request",
+  });
+}
+
+export async function POST(request: Request) {
+  const body = await request.json();
+
+  return Response.json(body);
+}
+
+export async function PUT(request: Request) {
+  return Response.json({
+    message: "PUT request",
+  });
+}
+
+export async function DELETE() {
+  return Response.json({
+    message: "DELETE request",
+  });
+}
+```
+
+This makes Route Handlers useful for building APIs.
+
+---
+
+# Request and Response
+
+You can read headers:
+
+```ts
+export async function GET(request: Request) {
+  const userAgent = request.headers.get("user-agent");
+
+  return Response.json({
+    userAgent,
+  });
+}
+```
+
+You can read query parameters:
+
+```ts
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+
+  const search = searchParams.get("search");
+
+  return Response.json({
+    search,
+  });
+}
+```
+
+Request:
+
+```text
+/api/products?search=laptop
+```
+
+Result:
+
+```json
+{
+  "search": "laptop"
+}
+```
+
+---
+
+# Server Actions
+
+Server Actions allow server-side functions to be called from application code, particularly forms and interactive mutations.
+
+Example:
+
+```ts
+"use server";
+
+export async function createUser(formData: FormData) {
+  const name = formData.get("name");
+
+  console.log(name);
+}
+```
+
+You can connect this action to a form:
+
+```tsx
+import { createUser } from "./actions";
+
+export default function SignupForm() {
+  return (
+    <form action={createUser}>
+      <input
+        name="name"
+        placeholder="Your name"
+      />
+
+      <button type="submit">
+        Create account
+      </button>
+    </form>
+  );
+}
+```
+
+The action executes on the server.
+
+---
+
+# Forms
+
+A simple Server Action form:
+
+```tsx
+async function createPost(formData: FormData) {
+  "use server";
+
+  const title = formData.get("title");
+  const content = formData.get("content");
+
+  console.log({
+    title,
+    content,
+  });
+}
+
+export default function CreatePost() {
+  return (
+    <form action={createPost}>
+      <input
+        name="title"
+        placeholder="Post title"
+      />
+
+      <textarea
+        name="content"
+        placeholder="Post content"
+      />
+
+      <button type="submit">
+        Publish
+      </button>
+    </form>
+  );
+}
+```
+
+Server Actions are useful for mutations such as:
+
+```text
+Create
+Update
+Delete
+Submit
+Save
+Publish
+```
+
+---
+
+# Cookies
+
+Server-side code can read cookies using Next.js utilities.
+
+```ts
+import { cookies } from "next/headers";
+
+export async function getUserToken() {
+  const cookieStore = await cookies();
+
+  return cookieStore.get("token")?.value;
+}
+```
+
+Cookies can be used for:
+
+* Sessions
+* Authentication
+* Preferences
+* Temporary state
+
+Sensitive authentication information should be handled carefully.
+
+---
+
+# Authentication
+
+Authentication determines who a user is.
+
+A typical authentication system looks like:
+
+```text
+User
+ │
+ ▼
+Login Form
+ │
+ ▼
+Server
+ │
+ ├── Validate credentials
+ │
+ ├── Create session
+ │
+ └── Set secure cookie
+ │
+ ▼
+Authenticated User
+```
+
+A login route could look like:
+
+```ts
+import { NextResponse } from "next/server";
+
+export async function POST(request: Request) {
+  const { email, password } = await request.json();
+
+  const user = await authenticateUser(
+    email,
+    password
+  );
+
+  if (!user) {
+    return NextResponse.json(
+      { error: "Invalid credentials" },
+      { status: 401 }
+    );
+  }
+
+  const response = NextResponse.json({
+    message: "Login successful",
+  });
+
+  response.cookies.set("session", "session-token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+  });
+
+  return response;
+}
+```
+
+In a real application, use a proper authentication/session library or a carefully designed server-side session system rather than storing passwords or sensitive data in client-side storage.
+
+---
+
+# Caching
+
+Caching is an important part of modern Next.js applications.
+
+Caching can reduce unnecessary work by reusing previously generated or fetched data.
+
+Conceptually:
+
+```text
+Request
+   │
+   ▼
+Cache
+ ┌─┴─┐
+Hit  Miss
+ │    │
+ ▼    ▼
+Data  Fetch
+       │
+       ▼
+      Cache
+```
+
+The exact caching behavior depends on the Next.js version, rendering mode, request characteristics, and APIs used.
+
+Do not assume that every `fetch()` behaves identically in every modern Next.js release.
+
+---
+
+# Revalidation
+
+Revalidation allows data to be refreshed after a period of time.
+
+For example:
+
+```tsx
+const response = await fetch(
+  "https://api.example.com/posts",
+  {
+    next: {
+      revalidate: 60,
+    },
+  }
+);
+```
+
+This expresses a desire to reuse the fetched result and refresh it periodically.
+
+This pattern can be useful for content that does not need to change on every request.
+
+Examples:
+
+```text
+News
+Products
+Blog posts
+Public profiles
+Documentation
+```
+
+---
+
+# On-Demand Revalidation
+
+After modifying data, you may want to invalidate cached content.
+
+Next.js provides APIs such as:
+
+```ts
+import { revalidatePath } from "next/cache";
+
+revalidatePath("/blog");
+```
+
+This can be useful after creating or updating content.
+
+For example:
+
+```ts
+"use server";
+
+import { revalidatePath } from "next/cache";
+
+export async function createPost(formData: FormData) {
+  const title = formData.get("title");
+
+  await savePost(title);
+
+  revalidatePath("/blog");
+}
+```
+
+---
+
+# Middleware and Request Interception
+
+Next.js supports request interception through its request-processing features. In current Next.js versions, this functionality may be represented through the `proxy.ts` convention depending on the version and project setup.
+
+A common use case is checking authentication before allowing access to certain routes.
+
+Conceptually:
+
+```text
+Request
+   │
+   ▼
+Request Interception
+   │
+   ├── Authenticated → Continue
+   │
+   └── Not authenticated → Redirect
+```
+
+For example, the logic might look like:
+
+```ts
+import { NextResponse } from "next/server";
+
+export function proxy(request: Request) {
+  const authenticated = true;
+
+  if (!authenticated) {
+    return NextResponse.redirect(
+      new URL("/login", request.url)
+    );
+  }
+
+  return NextResponse.next();
+}
+```
+
+The exact API and file convention should be checked against the Next.js version used by your project.
+
+---
+
+# Search Parameters
+
+Search parameters are useful for filtering and searching.
+
+URL:
+
+```text
+/products?category=laptop&sort=price
+```
+
+A page can access search parameters.
+
+```tsx
+export default async function ProductsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{
+    category?: string;
+    sort?: string;
+  }>;
+}) {
+  const params = await searchParams;
+
+  return (
+    <main>
+      <p>Category: {params.category}</p>
+      <p>Sort: {params.sort}</p>
+    </main>
+  );
+}
+```
+
+This is useful for:
+
+* Search
+* Filtering
+* Sorting
+* Pagination
+* URL-based application state
+
+---
+
+# Pagination
+
+Suppose your URL is:
+
+```text
+/products?page=2
+```
+
+You can retrieve the page number:
+
+```tsx
+export default async function ProductsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>;
+}) {
+  const params = await searchParams;
+
+  const page = Number(params.page ?? "1");
+
+  return (
+    <main>
+      <h1>Page {page}</h1>
+    </main>
+  );
+}
+```
+
+You can then use the page number when querying your database.
+
+For example:
+
+```ts
+const pageSize = 20;
+
+const skip = (page - 1) * pageSize;
+
+const products = await prisma.product.findMany({
+  skip,
+  take: pageSize,
+});
+```
+
+---
+
+# Parallel Data Fetching
+
+If two pieces of data are independent, they can often be fetched in parallel.
+
+Instead of:
+
+```tsx
+const users = await getUsers();
+
+const posts = await getPosts();
+```
+
+you can use:
+
+```tsx
+const [users, posts] = await Promise.all([
+  getUsers(),
+  getPosts(),
+]);
+```
+
+This can reduce total waiting time.
+
+Conceptually:
+
+```text
+Sequential
+
+Request
+  │
+  ▼
+Users
+  │
+  ▼
+Posts
+  │
+  ▼
+Response
+```
+
+versus:
+
+```text
+Parallel
+
+        ┌── Users ──┐
+Request ┤           ├── Response
+        └── Posts ──┘
+```
+
+---
+
+# Sequential Data Fetching
+
+Sometimes requests depend on each other.
+
+For example:
+
+```tsx
+const user = await getUser();
+
+const posts = await getPostsByUser(user.id);
+```
+
+Here, the second request requires the result of the first.
+
+Therefore sequential fetching is appropriate.
+
+---
+
+# Streaming
+
+Streaming allows a page to progressively send UI rather than waiting for everything to finish.
+
+A common structure is:
+
+```text
+Page
+│
+├── Header
+├── Main Content
+│   ├── Fast Content
+│   └── Slow Content
+└── Footer
+```
+
+The fast parts can appear while slower content is still loading.
+
+This can improve the perceived performance of data-heavy applications.
+
+---
+
+# Suspense
+
+React Suspense can be used around slow sections.
+
+```tsx
+import { Suspense } from "react";
+
+export default function Dashboard() {
+  return (
+    <main>
+      <h1>Dashboard</h1>
+
+      <Suspense fallback={<p>Loading statistics...</p>}>
+        <Statistics />
+      </Suspense>
+    </main>
+  );
+}
+
+async function Statistics() {
+  const data = await getStatistics();
+
+  return (
+    <section>
+      <p>Total users: {data.users}</p>
+      <p>Total posts: {data.posts}</p>
+    </section>
+  );
+}
+```
+
+The fallback UI can be displayed while the asynchronous component loads.
+
+---
+
+# Project Organization
+
+A good project structure makes large applications easier to maintain.
+
+One possible structure is:
+
+```text
+app/
+├── layout.tsx
+├── page.tsx
+├── globals.css
+│
+├── login/
+│   └── page.tsx
+│
+├── register/
+│   └── page.tsx
+│
+├── dashboard/
+│   ├── layout.tsx
+│   ├── page.tsx
+│   ├── settings/
+│   │   └── page.tsx
+│   └── users/
+│       └── page.tsx
+│
+└── api/
+    └── users/
+        └── route.ts
+
+components/
+├── ui/
+│   ├── Button.tsx
+│   ├── Input.tsx
+│   └── Modal.tsx
+│
+├── Navbar.tsx
+├── Footer.tsx
+└── Sidebar.tsx
+
+lib/
+├── db.ts
+├── auth.ts
+├── utils.ts
+└── validations.ts
+
+services/
+├── user.service.ts
+└── post.service.ts
+
+types/
+├── user.ts
+└── post.ts
+
+public/
+├── images/
+└── icons/
+```
+
+There is no single structure that every project must follow, but separating reusable UI, server utilities, services, and route files can become valuable as an application grows.
+
+---
+
+# Reusable Components
+
+Instead of repeating UI:
+
+```tsx
+<button className="rounded-lg bg-black px-4 py-2 text-white">
+  Login
+</button>
+```
+
+create a reusable component:
+
+```tsx
+type ButtonProps = {
+  children: React.ReactNode;
+};
+
+export function Button({ children }: ButtonProps) {
+  return (
+    <button className="rounded-lg bg-black px-4 py-2 text-white">
+      {children}
+    </button>
+  );
+}
+```
+
+Then:
+
+```tsx
+import { Button } from "@/components/ui/Button";
+
+export default function LoginPage() {
+  return (
+    <Button>
+      Login
+    </Button>
+  );
+}
+```
+
+This improves consistency and makes UI changes easier.
+
+---
+
+# TypeScript With Next.js
+
+Next.js works very well with TypeScript.
+
+A page:
+
+```tsx
+type User = {
+  id: string;
+  name: string;
+  email: string;
+};
+
+export default function UserCard({
+  user,
+}: {
+  user: User;
+}) {
+  return (
+    <article>
+      <h2>{user.name}</h2>
+      <p>{user.email}</p>
+    </article>
+  );
+}
+```
+
+Types help catch errors before runtime.
+
+For example, TypeScript can detect:
+
+```tsx
+user.username
+```
+
+if `username` does not exist in the `User` type.
+
+---
+
+# Database Integration
+
+Next.js can work with many databases.
+
+Common choices include:
+
+* PostgreSQL
+* MySQL
+* MongoDB
+* SQLite
+* MariaDB
+
+You can also use ORMs such as Prisma or database-specific libraries.
+
+A Prisma example:
+
+```ts
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
+
+export default prisma;
+```
+
+Then:
+
+```ts
+const users = await prisma.user.findMany();
+```
+
+For a MongoDB application, you could use Mongoose:
+
+```ts
+import mongoose from "mongoose";
+
+export async function connectDB() {
+  if (mongoose.connection.readyState === 1) {
+    return;
+  }
+
+  await mongoose.connect(process.env.MONGODB_URI!);
+}
+```
+
+Then call the database connection from server-side code.
+
+---
+
+# Building a Full-Stack Application
+
+One of the biggest advantages of Next.js is that frontend and backend code can live together.
+
+For example, imagine building a blog.
+
+```text
+Next.js Blog
+│
+├── Frontend
+│   ├── Home
+│   ├── Blog
+│   ├── Post
+│   └── Dashboard
+│
+├── Backend
+│   ├── Authentication
+│   ├── Server Actions
+│   ├── Route Handlers
+│   └── Database
+│
+└── Infrastructure
+    ├── Environment Variables
+    ├── Caching
+    └── Deployment
+```
+
+A post could be created with:
+
+```tsx
+<form action={createPost}>
+  <input name="title" />
+  <textarea name="content" />
+
+  <button type="submit">
+    Publish
+  </button>
+</form>
+```
+
+The Server Action:
+
+```ts
+"use server";
+
+import { revalidatePath } from "next/cache";
+
+export async function createPost(formData: FormData) {
+  const title = String(formData.get("title"));
+  const content = String(formData.get("content"));
+
+  await db.post.create({
+    data: {
+      title,
+      content,
+    },
+  });
+
+  revalidatePath("/blog");
+}
+```
+
+Now the complete flow is:
+
+```text
+Form
+ ↓
+Server Action
+ ↓
+Database
+ ↓
+Revalidation
+ ↓
+Updated Blog
+```
+
+---
+
+# Security Considerations
+
+Full-stack frameworks make it easier to build applications, but security is still the developer's responsibility.
+
+## Never expose secrets
+
+Bad:
+
+```tsx
+"use client";
+
+const secret = process.env.DATABASE_PASSWORD;
+```
+
+Never expose database passwords, private API keys, or authentication secrets to browser code.
+
+---
+
+## Validate user input
+
+Do not trust incoming data.
+
+For example:
+
+```ts
+const title = String(formData.get("title") ?? "");
+
+if (title.length < 3) {
+  throw new Error("Title is too short");
+}
+```
+
+For larger applications, use a validation library such as Zod.
+
+Example:
+
+```ts
+import { z } from "zod";
+
+const postSchema = z.object({
+  title: z.string().min(3),
+  content: z.string().min(10),
+});
+
+const result = postSchema.safeParse({
+  title,
+  content,
+});
+
+if (!result.success) {
+  throw new Error("Invalid post data");
+}
+```
+
+---
+
+# Authentication Security
+
+Avoid storing sensitive authentication tokens in ordinary client-side storage unless you have a specific, well-understood reason.
+
+For session-based authentication, secure cookies are commonly preferred.
+
+Important cookie options can include:
+
+```ts
+{
+  httpOnly: true,
+  secure: true,
+  sameSite: "lax",
+  path: "/"
+}
+```
+
+The exact configuration depends on your authentication architecture.
+
+---
+
+# Performance Optimization
+
+Next.js applications can be optimized in several ways.
+
+## 1. Use Server Components
+
+Keep components server-side unless they require browser interactivity.
+
+---
+
+## 2. Optimize Images
+
+Use:
+
+```tsx
+import Image from "next/image";
+```
+
+instead of manually loading large images everywhere.
+
+---
+
+## 3. Avoid Unnecessary Client Components
+
+Do not automatically put:
+
+```tsx
+"use client";
+```
+
+at the top of every file.
+
+Use it when client-side features are required.
+
+---
+
+## 4. Fetch Independent Data in Parallel
+
+Use:
+
+```tsx
+await Promise.all([
+  getUsers(),
+  getPosts(),
+]);
+```
+
+when requests do not depend on each other.
+
+---
+
+## 5. Use Loading States
+
+Provide:
+
+```text
+Skeleton
+Spinner
+Placeholder
+Streaming UI
+```
+
+for slow operations.
+
+---
+
+## 6. Use Appropriate Caching
+
+Cache data when it is safe and useful to reuse it.
+
+For frequently changing information, choose a strategy that keeps data sufficiently fresh.
+
+---
+
+# Deployment
+
+A Next.js application can be deployed to various hosting providers.
+
+A typical production workflow is:
+
+```bash
+npm run build
+```
+
+Then:
+
+```bash
+npm start
+```
+
+The build process creates the production application.
+
+For deployment, configure:
+
+```text
+Environment Variables
+Database
+Domain
+Build Command
+Start Command
+```
+
+A common deployment flow is:
+
+```text
+Git Repository
+      │
+      ▼
+Hosting Platform
+      │
+      ├── Install dependencies
+      ├── Run build
+      ├── Configure environment
+      └── Start application
+```
+
+---
+
+# Building a Simple Next.js Blog
+
+Let's combine several concepts into a small blog.
+
+Project:
+
+```text
+app/
+├── layout.tsx
+├── page.tsx
+│
+└── blog/
+    ├── page.tsx
+    └── [slug]/
+        └── page.tsx
+```
+
+Home page:
+
+```tsx
+import Link from "next/link";
+
+export default function HomePage() {
+  return (
+    <main>
+      <h1>My Blog</h1>
+
+      <p>
+        Welcome to my Next.js blog.
+      </p>
+
+      <Link href="/blog">
+        View Blog
+      </Link>
+    </main>
+  );
+}
+```
+
+Blog page:
+
+```tsx
+import Link from "next/link";
+
+const posts = [
+  {
+    slug: "learn-nextjs",
+    title: "Learn Next.js",
+  },
+  {
+    slug: "react-server-components",
+    title: "React Server Components",
+  },
+];
+
+export default function BlogPage() {
+  return (
+    <main>
+      <h1>Blog</h1>
+
+      {posts.map((post) => (
+        <article key={post.slug}>
+          <h2>{post.title}</h2>
+
+          <Link href={`/blog/${post.slug}`}>
+            Read Article
+          </Link>
+        </article>
+      ))}
+    </main>
+  );
+}
+```
+
+Dynamic post page:
+
+```tsx
+const posts = [
+  {
+    slug: "learn-nextjs",
+    title: "Learn Next.js",
+    content:
+      "Next.js is a React framework for building modern applications.",
+  },
+  {
+    slug: "react-server-components",
+    title: "React Server Components",
+    content:
+      "Server Components allow components to render on the server.",
+  },
+];
+
+export default async function PostPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+
+  const post = posts.find(
+    (post) => post.slug === slug
+  );
+
+  if (!post) {
+    return <h1>Post not found</h1>;
+  }
+
+  return (
+    <article>
+      <h1>{post.title}</h1>
+
+      <p>{post.content}</p>
+    </article>
+  );
+}
+```
+
+This demonstrates:
+
+```text
+Routing
+Dynamic Routes
+Link
+Server Components
+Async Pages
+Data Retrieval
+```
+
+---
+
+# A More Realistic Blog Architecture
+
+For a production blog, you might eventually have:
+
+```text
+app/
+├── layout.tsx
+├── page.tsx
+│
+├── blog/
+│   ├── page.tsx
+│   └── [slug]/
+│       ├── page.tsx
+│       └── loading.tsx
+│
+├── dashboard/
+│   ├── layout.tsx
+│   ├── page.tsx
+│   └── posts/
+│       ├── page.tsx
+│       └── create/
+│           └── page.tsx
+│
+└── api/
+    └── upload/
+        └── route.ts
+
+components/
+├── Navbar.tsx
+├── Footer.tsx
+├── BlogCard.tsx
+├── MarkdownRenderer.tsx
+└── PostEditor.tsx
+
+lib/
+├── db.ts
+├── auth.ts
+└── utils.ts
+
+services/
+├── post.service.ts
+└── user.service.ts
+
+public/
+└── images/
+```
+
+This structure scales much better than putting everything inside `page.tsx`.
+
+---
+
+# Common Mistakes
+
+## Mistake 1: Making Everything a Client Component
+
+Avoid:
+
+```tsx
+"use client";
+```
+
+everywhere.
+
+Only use it when necessary.
+
+---
+
+## Mistake 2: Exposing Secrets
+
+Never expose:
+
+```text
+DATABASE_URL
+PRIVATE_API_KEY
+JWT_SECRET
+DATABASE_PASSWORD
+```
+
+to browser code.
+
+---
+
+## Mistake 3: Ignoring Loading States
+
+Large applications often have slow database or API requests.
+
+Use:
+
+```text
+loading.tsx
+Suspense
+Skeleton UI
+Streaming
+```
+
+where appropriate.
+
+---
+
+## Mistake 4: Ignoring Errors
+
+Production applications should handle:
+
+```text
+Network failures
+Invalid input
+Database failures
+Missing data
+Unauthorized requests
+Unexpected exceptions
+```
+
+Use:
+
+```text
+error.tsx
+not-found.tsx
+try/catch
+validation
+proper HTTP status codes
+```
+
+---
+
+## Mistake 5: Putting Everything in One Component
+
+Avoid creating a page such as:
+
+```text
+page.tsx
+    ↓
+1000+ lines
+```
+
+Instead split the application into:
+
+```text
+Page
+├── Navbar
+├── Sidebar
+├── Content
+├── Card
+├── Form
+└── Footer
+```
+
+---
+
+# Recommended Next.js Learning Path
+
+If you are learning Next.js, do not attempt to learn every advanced feature at once.
+
+A good progression is:
+
+## Level 1 — React Fundamentals
+
+Learn:
+
+```text
+Components
+Props
+State
+Events
+Hooks
+Forms
+Conditional Rendering
+Lists
+```
+
+---
+
+## Level 2 — Next.js Fundamentals
+
+Learn:
+
+```text
+App Router
+Pages
+Layouts
+Link
+Dynamic Routes
+Route Groups
+Images
+Fonts
+Metadata
+```
+
+---
+
+## Level 3 — Server Architecture
+
+Learn:
+
+```text
+Server Components
+Client Components
+Data Fetching
+Loading UI
+Error Handling
+Suspense
+Streaming
+```
+
+---
+
+## Level 4 — Backend
+
+Learn:
+
+```text
+Route Handlers
+HTTP Methods
+Server Actions
+Cookies
+Environment Variables
+Database Integration
+```
+
+---
+
+## Level 5 — Authentication
+
+Learn:
+
+```text
+Sessions
+Cookies
+Authorization
+Protected Routes
+Roles
+Permissions
+```
+
+---
+
+## Level 6 — Production
+
+Learn:
+
+```text
+Caching
+Revalidation
+Performance
+SEO
+Security
+Testing
+Deployment
+Monitoring
+```
+
+---
+
+# Example Full-Stack Architecture
+
+A modern Next.js application might eventually look like:
+
+```text
+                         Browser
+                            │
+                            ▼
+                    ┌───────────────┐
+                    │    Next.js    │
+                    │    App Router │
+                    └───────┬───────┘
+                            │
+              ┌─────────────┼─────────────┐
+              │             │             │
+              ▼             ▼             ▼
+          Server       Client UI      Route Handlers
+        Components     Components          │
+              │             │              │
+              └─────────────┼──────────────┘
+                            │
+                            ▼
+                     Server Actions
+                            │
+                            ▼
+                         Services
+                            │
+                            ▼
+                         Database
+```
+
+This architecture allows a single application to contain:
+
+* User interfaces
+* Server-rendered pages
+* Interactive components
+* API endpoints
+* Server mutations
+* Authentication
+* Database operations
+
+---
+
+# Next.js and MERN
+
+Developers coming from the MERN stack may initially think of Next.js as replacing React and Express.
+
+The comparison is roughly:
+
+```text
+MERN
+
+MongoDB
+   ↓
+Express
+   ↓
+React
+   ↓
+Node.js
+```
+
+With Next.js:
+
+```text
+Next.js
+   │
+   ├── React UI
+   ├── Server Components
+   ├── Route Handlers
+   ├── Server Actions
+   └── Server-side application logic
+          │
+          ▼
+       MongoDB
+```
+
+You can still use MongoDB, Mongoose, PostgreSQL, Prisma, Redis, and many other technologies with Next.js.
+
+Next.js does not require a particular database.
+
+---
+
+# Next.js With MongoDB
+
+A MongoDB connection might look like:
+
+```ts
+import mongoose from "mongoose";
+
+const MONGODB_URI = process.env.MONGODB_URI!;
+
+export async function connectDB() {
+  if (mongoose.connection.readyState >= 1) {
+    return;
+  }
+
+  await mongoose.connect(MONGODB_URI);
+}
+```
+
+A model:
+
+```ts
+import mongoose, { Schema } from "mongoose";
+
+const PostSchema = new Schema(
+  {
+    title: {
+      type: String,
+      required: true,
+    },
+
+    content: {
+      type: String,
+      required: true,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+export const Post =
+  mongoose.models.Post ||
+  mongoose.model("Post", PostSchema);
+```
+
+Then a Server Component could retrieve posts:
+
+```tsx
+import { connectDB } from "@/lib/db";
+import { Post } from "@/models/Post";
+
+export default async function BlogPage() {
+  await connectDB();
+
+  const posts = await Post.find()
+    .sort({ createdAt: -1 })
+    .lean();
+
+  return (
+    <main>
+      {posts.map((post: any) => (
+        <article key={post._id.toString()}>
+          <h2>{post.title}</h2>
+          <p>{post.content}</p>
+        </article>
+      ))}
+    </main>
+  );
+}
+```
+
+This makes Next.js a strong option for developers already familiar with MERN.
+
+---
+
+# Next.js With Prisma and PostgreSQL
+
+Another common architecture is:
+
+```text
+Next.js
+   │
+   ▼
+Prisma
+   │
+   ▼
+PostgreSQL
+```
+
+A Prisma query might look like:
+
+```ts
+const posts = await prisma.post.findMany({
+  orderBy: {
+    createdAt: "desc",
+  },
+});
+```
+
+Then:
+
+```tsx
+export default async function BlogPage() {
+  const posts = await prisma.post.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  return (
+    <main>
+      {posts.map((post) => (
+        <article key={post.id}>
+          <h2>{post.title}</h2>
+          <p>{post.content}</p>
+        </article>
+      ))}
+    </main>
+  );
+}
+```
+
+---
+
+# A Complete CRUD Example
+
+A typical application needs CRUD operations:
+
+```text
+Create
+Read
+Update
+Delete
+```
+
+Suppose we have a todo application.
+
+## Create
+
+```ts
+"use server";
+
+export async function createTodo(formData: FormData) {
+  const title = String(
+    formData.get("title") ?? ""
+  );
+
+  if (!title.trim()) {
+    throw new Error("Title is required");
+  }
+
+  await db.todo.create({
+    data: {
+      title,
+    },
+  });
+}
+```
+
+## Read
+
+```tsx
+export default async function TodoPage() {
+  const todos = await db.todo.findMany();
+
+  return (
+    <main>
+      {todos.map((todo) => (
+        <div key={todo.id}>
+          {todo.title}
+        </div>
+      ))}
+    </main>
+  );
+}
+```
+
+## Update
+
+```ts
+"use server";
+
+export async function updateTodo(
+  id: string,
+  title: string
+) {
+  await db.todo.update({
+    where: {
+      id,
+    },
+    data: {
+      title,
+    },
+  });
+}
+```
+
+## Delete
+
+```ts
+"use server";
+
+export async function deleteTodo(id: string) {
+  await db.todo.delete({
+    where: {
+      id,
+    },
+  });
+}
+```
+
+This is the foundation of many CRUD applications.
+
+---
+
+# Building a Modern Dashboard
+
+A dashboard could use:
+
+```text
+/dashboard
+│
+├── Sidebar
+├── Header
+│
+├── Statistics
+│   ├── Users
+│   ├── Revenue
+│   ├── Posts
+│   └── Orders
+│
+├── Charts
+│
+└── Recent Activity
+```
+
+The dashboard layout:
+
+```tsx
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex min-h-screen">
+      <aside className="w-64 border-r p-6">
+        <h2>Dashboard</h2>
+      </aside>
+
+      <main className="flex-1 p-6">
+        {children}
+      </main>
+    </div>
+  );
+}
+```
+
+Individual sections can remain Server Components when they only display server data.
+
+Interactive charts, filters, and controls can be Client Components.
+
+---
+
+# The Most Important Mental Model
+
+One of the most important things to understand about modern Next.js is that your application is not simply:
+
+```text
+React → Browser
+```
+
+Instead, think of it as:
+
+```text
+                         Next.js
+                            │
+              ┌─────────────┴─────────────┐
+              │                           │
+           Server                       Client
+              │                           │
+      ┌───────┼────────┐          ┌───────┼───────┐
+      │       │        │          │       │       │
+   Database  APIs   Server      State   Events  Browser
+                     Actions
+```
+
+The server is responsible for server-side work.
+
+The client is responsible for browser interaction.
+
+Learning when to use each side is one of the most important skills in modern Next.js development.
+
+---
+
+# Final Checklist
+
+Before considering yourself comfortable with Next.js, you should understand:
+
+## Fundamentals
+
+* [ ] What Next.js is
+* [ ] How it differs from React
+* [ ] How to create a project
+* [ ] App Router
+* [ ] Pages
+* [ ] Layouts
+* [ ] Nested routes
+* [ ] Dynamic routes
+* [ ] Route groups
+* [ ] `Link`
+
+## Rendering
+
+* [ ] Server Components
+* [ ] Client Components
+* [ ] `"use client"`
+* [ ] Server-side data fetching
+* [ ] Loading UI
+* [ ] Error handling
+* [ ] `notFound()`
+* [ ] Suspense
+* [ ] Streaming
+
+## Backend
+
+* [ ] Route Handlers
+* [ ] GET
+* [ ] POST
+* [ ] PUT
+* [ ] DELETE
+* [ ] Request handling
+* [ ] Server Actions
+* [ ] Cookies
+* [ ] Environment variables
+
+## Data
+
+* [ ] REST APIs
+* [ ] Database queries
+* [ ] MongoDB
+* [ ] PostgreSQL
+* [ ] Prisma
+* [ ] Mongoose
+* [ ] Caching
+* [ ] Revalidation
+
+## Production
+
+* [ ] Authentication
+* [ ] Authorization
+* [ ] SEO
+* [ ] Metadata
+* [ ] Image optimization
+* [ ] Font optimization
+* [ ] Security
+* [ ] Performance
+* [ ] Deployment
+
+---
+
+# Conclusion
+
+Next.js has evolved from being primarily a React framework for server-rendered pages into a comprehensive framework for building modern full-stack web applications.
+
+Its architecture allows developers to combine:
+
+```text
+React
++
+Server Components
++
+Client Components
++
+Routing
++
+Data Fetching
++
+Server Actions
++
+API Routes
++
+Database
++
+Authentication
++
+Caching
++
+SEO
++
+Optimization
+```
+
+The most important concepts to master are not individual APIs, but the architecture behind them.
+
+Understand:
+
+```text
+What runs on the server?
+What runs in the browser?
+Where should data be fetched?
+Where should mutations happen?
+How should authentication work?
+When should data be cached?
+When should a component be interactive?
+```
+
+Once these concepts become clear, Next.js becomes much easier to work with.
+
+A good learning progression is:
+
+```text
+React
+   ↓
+Next.js Routing
+   ↓
+Layouts
+   ↓
+Server Components
+   ↓
+Client Components
+   ↓
+Data Fetching
+   ↓
+Route Handlers
+   ↓
+Server Actions
+   ↓
+Database
+   ↓
+Authentication
+   ↓
+Caching
+   ↓
+Performance
+   ↓
+Deployment
+```
+
+With these concepts, you can move from building simple Next.js pages to building complete applications such as blogs, dashboards, social platforms, e-commerce systems, SaaS products, and other production-grade full-stack applications.

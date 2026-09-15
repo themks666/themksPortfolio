@@ -1,8 +1,20 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  transpilePackages: ['next-mdx-remote'],
   reactCompiler: true,
-};
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'img.poki-cdn.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.fbcdn.net', // Matches all Facebook CDN subdomains
+      },
+    ],
+  },
+}
 
-export default nextConfig;
+export default nextConfig
