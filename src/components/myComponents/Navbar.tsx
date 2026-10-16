@@ -42,7 +42,7 @@ const Navbar = () => {
           </li>
           <li className="flex items-center">
             <ThemeToggle></ThemeToggle>
-            <a href="/ManishCV.pdf" download="ManishCV.pdf">
+            <a href="/Manish_CV.pdf" download="ManishCV.pdf">
               <Button>Download CV</Button>
             </a>
           </li>
