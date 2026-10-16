@@ -42,32 +42,34 @@ const Navbar = () => {
           </li>
           <li className="flex items-center">
             <ThemeToggle></ThemeToggle>
-            <Button>Download CV</Button>
+            <a href="/ManishCV.pdf" download="ManishCV.pdf">
+              <Button>Download CV</Button>
+            </a>
           </li>
         </ul>
         <div className="flex md:hidden justify-center pt-3 gap-10">
-            <Link
-              href="/"
-              className="flex hover:text-gray-400 text-sm items-center flex-col"
-            >
-              <House></House>
-              <span className="text-gray-300">Home</span>
-            </Link>
-            <Link
-              href="/projects"
-              className="flex hover:text-gray-400 text-sm items-center flex-col"
-            >
-              <Briefcase></Briefcase>
-              <span className="text-gray-300">Project</span>
-            </Link>
-            <Link
-              href="/blogs"
-              className="flex hover:text-gray-400 text-sm items-center flex-col"
-            >
-              <Book></Book>
-              <span className="text-gray-300">Blogs</span>
-            </Link>
-          </div>
+          <Link
+            href="/"
+            className="flex hover:text-gray-400 text-sm items-center flex-col"
+          >
+            <House></House>
+            <span className="text-gray-300">Home</span>
+          </Link>
+          <Link
+            href="/projects"
+            className="flex hover:text-gray-400 text-sm items-center flex-col"
+          >
+            <Briefcase></Briefcase>
+            <span className="text-gray-300">Project</span>
+          </Link>
+          <Link
+            href="/blogs"
+            className="flex hover:text-gray-400 text-sm items-center flex-col"
+          >
+            <Book></Book>
+            <span className="text-gray-300">Blogs</span>
+          </Link>
+        </div>
       </nav>
     </header>
   );
