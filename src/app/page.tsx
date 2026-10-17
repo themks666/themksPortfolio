@@ -7,12 +7,12 @@ export default function Home() {
     <>
       <div className="absolute h-40 w-40 bg-blue-500/50 top-16 left-1/6 -z-10 rounded-full   blur-3xl"></div>
       <div className="absolute h-40 w-40 bg-rose-500/50 bottom-16 right-1/6 -z-10 rounded-full   blur-3xl"></div>
-      <section className="flex grow w-full mx-auto pt-10 justify-center">
+      <section className="flex grow w-full items-center pt-10 justify-center">
         <main className="">
           <p className="text-emerald-600 lg:text-2xl md:text-xl font-semibold">
             👋 Hey there!, I'm-
           </p>
-          <p className=" lg:text-8xl sm:text-6xl text-5xl font-bold">
+          <p className=" lg:text-8xl sm:text-6xl text-5xl font-bold">   
             Manish K. Sah
           </p>
           <div className="py-5">
